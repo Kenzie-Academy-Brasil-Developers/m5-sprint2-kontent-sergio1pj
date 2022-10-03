@@ -48,8 +48,8 @@ class ContentDetailView(APIView):
         for key, value in request.data.items():
             setattr(content, key, value)
         content.save()
-        contect_dict = model_to_dict(content)
-        return Response(contect_dict, status=status.HTTP_200_OK)
+        content_dict = model_to_dict(content)
+        return Response(content_dict, status=status.HTTP_200_OK)
         
     def delete(self, request: Request, pk: int) -> Response:
         try:
