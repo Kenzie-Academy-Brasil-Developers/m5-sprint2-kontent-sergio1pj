@@ -66,7 +66,6 @@ class ContentViewFilter(APIView):
         description = request.query_params.get('description')
         students = request.query_params.get('students')
         is_active = request.query_params.get('is_active')
-        #Ignorar case sensitive
         if title:
             title = title.lower()
         elif module:
