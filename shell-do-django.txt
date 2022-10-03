@@ -1,0 +1,14 @@
+from content.models import Content
+
+new_content = {
+    "title": "Python",
+    "module": "M5",
+    "description": "Python Fundamental",
+    "students": 90,
+    "is_active": True,
+}
+
+content = Content(**new_content)
+content.save()
+
+content
