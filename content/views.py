@@ -32,6 +32,32 @@ class ContentView(APIView):
                 content = Content.objects.create(**request.data)
                 return Response(model_to_dict(content), status=status.HTTP_201_CREATED)
 
+class ContentDetailView(APIView):
+    def get(self, request: Request, pk: int) -> Response:
+        try:
+            content = Content.objects.get(id=pk)
+            return Response(model_to_dict(content), status=status.HTTP_200_OK)
+        except Content.DoesNotExist:
+            return Response({'error': 'Content not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def patch(self, request: Request, pk: int) -> Response:
+        try:
+            content = Content.objects.get(id=pk)
+        except Content.DoesNotExist:
+            return Response({'error': 'Content not found'}, status=status.HTTP_404_NOT_FOUND)
+        for key, value in request.data.items():
+            setattr(content, key, value)
+        content.save()
+        contect_dict = model_to_dict(content)
+        return Response(contect_dict, status=status.HTTP_200_OK)
+        
+    def delete(self, request: Request, pk: int) -> Response:
+        try:
+            content = Content.objects.get(id=pk)
+        except Content.DoesNotExist:
+            return Response({'error': 'Content not found'}, status=status.HTTP_404_NOT_FOUND)
+        content.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     
 
