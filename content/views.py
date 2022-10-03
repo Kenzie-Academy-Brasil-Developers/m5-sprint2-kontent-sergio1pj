@@ -59,7 +59,49 @@ class ContentDetailView(APIView):
         content.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
+class ContentViewFilter(APIView):
+    def get(self, request: Request) -> Response:
+        title = request.query_params.get('title')
+        module = request.query_params.get('module')
+        description = request.query_params.get('description')
+        students = request.query_params.get('students')
+        is_active = request.query_params.get('is_active')
+        #Ignorar case sensitive
+        if title:
+            title = title.lower()
+        elif module:
+            module = module.lower()
+        elif description:
+            description = description.lower()
+        elif students:
+            students = students.lower()
+        elif is_active:
+            is_active = is_active.lower()
+        else :
+            return Response({'error': 'Missing parameter'}, status=status.HTTP_400_BAD_REQUEST)
+        contents = Content.objects.all()
+        content_list = []
+        for content in contents:
+            content_dict = model_to_dict(content)
+            if title:
+                if title in content_dict['title'].lower():
+                    content_list.append(content_dict)
+            elif module:
+                if module in content_dict['module'].lower():
+                    content_list.append(content_dict)
+            elif description:
+                if description in content_dict['description'].lower():
+                    content_list.append(content_dict)
+            elif students:
+                if students in str(content_dict['students']).lower():
+                    content_list.append(content_dict)
+            elif is_active:
+                if is_active in str(content_dict['is_active']).lower():
+                    content_list.append(content_dict)
+        return Response(content_list, status=status.HTTP_200_OK)
+
+
+
 
                
        
